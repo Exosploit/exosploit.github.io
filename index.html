@@ -209,7 +209,7 @@ document.getElementById('calculate').addEventListener('click', () => {
   const fuelPct = parseFloat(document.getElementById('fuel-input').value) || 0
   if (fuelPct > 0) {
     usedFuel = true
-    const timeByPercent = fuelMinTime + fuelPerPercent * fuelPct
+    const timeByPercent = fuelPerPercent * fuelPct
     const litres        = fuelPct * fuelRatio
     const timeByLitres  = litres * secondsPerLitre - fuelMinTime
     const fuelTime      = Math.max(timeByPercent, timeByLitres)
@@ -264,10 +264,8 @@ document.getElementById('calculate').addEventListener('click', () => {
     summary.push(`Brakes: ${brakesReplacement.toFixed(1)} seconds`)
   }
 
-  const totalWithPitLane = totalServiceTime + pitLaneTime + 8
+    const totalWithPitLane = totalServiceTime + pitLaneTime + 8
 
-    let minTime = -0.4
-    let maxTime = 0.8
 
     if (usedFuel && usedDamageRepair) {
     minTime = -2.5
