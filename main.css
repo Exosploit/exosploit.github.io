@@ -1,0 +1,390 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* header base */
+.site-header {
+    width: 100%;
+    background: transparent;
+    /* explicitly no background */
+    box-shadow: none;
+    z-index: 10;
+    /* safe, doesn't change positioning */
+    margin-bottom: 16px;
+    display: block;
+    /* force it to take full width */
+}
+
+.site-header a {
+    color: black;
+}
+
+/* internal layout */
+.header-inner {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 16px;
+}
+
+/* logo */
+.logo-link img {
+    display: block;
+    height: 40px;
+    /* scales logo visually while keeping aspect */
+    width: auto;
+}
+
+/* nav layout */
+.main-nav {
+    padding: 0 40px 0 40px;
+}
+
+.nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.dropdown-toggle,
+.home-button {
+    background: none;
+    border: none;
+    font: inherit;
+    cursor: pointer;
+    padding: 8px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px
+}
+
+.dropdown-toggle span {
+    font-size: 8px;
+    transform: translateY(1px);
+}
+
+/* hover / focus affordance */
+.dropdown-toggle:hover,
+.dropdown-toggle:focus {
+    outline: none;
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* dropdown container should be relative so menu can be absolute */
+.nav-item.dropdown {
+    position: relative;
+}
+
+/* the dropdown menu itself */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100%);
+    left: 0;
+    min-width: 140px;
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    background: white;
+    /* menu needs contrast so keep background white */
+    display: none;
+    transform-origin: top left;
+    z-index: 20;
+}
+
+/* dropdown links */
+.dropdown-menu li a {
+    display: block;
+    padding: 8px 14px;
+    text-decoration: none;
+    color: inherit;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+/* tiny hover style inside menu */
+.dropdown-menu li a:hover,
+.dropdown-menu li a:focus {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* show on parent focus-within (keyboard accessible) */
+.nav-item.dropdown:focus-within .dropdown-menu,
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* small responsive tweak */
+@media (max-width: 720px) {
+    .header-inner {
+        padding: 10px 12px;
+        gap: 12px;
+    }
+
+    .nav-list {
+        gap: 8px;
+    }
+}
+
+/* content */
+
+.content {
+    text-align: left;
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    min-height: calc(100vh - 250px);
+}
+
+.content img {
+    max-width: 800px;
+    width: 80%;
+}
+
+.content p {
+    width: 100%;
+}
+
+
+
+.split-two {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    /* This sets both row and column gap */
+}
+
+.split-two a {
+    border: none;
+    border-radius: 5px;
+    outline: 2px solid rgba(0, 0, 0, 0.1);
+    outline-offset: 2px;
+    background-color: transparent;
+    transition: 0.18s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.split-two a:hover {
+    transform: scale(1.02);
+}
+
+
+.contact-text {
+    text-align: center;
+}
+
+.contact-section {
+    margin-bottom: 32px;
+}
+
+.contact-method {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: #f9f9f9;
+    padding: 16px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.contact-method:hover {
+    background-color: #f1f1f1;
+}
+
+.contact-icon {
+    font-size: 1.8rem;
+    color: #444;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-info strong {
+    font-size: 1.1rem;
+}
+
+.contact-info a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.contact-info a:hover {
+    text-decoration: underline;
+}
+
+.legal h1,
+.legal h2 {
+    text-align: left;
+    width: 100%;
+}
+
+.rank-select {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.custom-dropdown {
+  position: relative;
+  width: 75px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-dropdown .selected {
+    border-radius: 8px;
+  padding: 5px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-dropdown .selected img {
+    width: 50px;
+    height: 25px;
+    object-fit: cover;
+}
+
+.custom-dropdown .dropdown-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: none;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.custom-dropdown .dropdown-list div {
+  display: flex;
+  justify-content: center;
+  padding: 5px 0;
+}
+
+.custom-dropdown .dropdown-list div:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.custom-dropdown .dropdown-list img {
+  width: 50px;
+  height: 25px;
+    object-fit: cover;
+}
+
+/* footer base */
+.site-footer {
+    padding: 40px 20px 10px 20px;
+    margin-top: 65px;
+    background-color: #6d6d6d;
+    /* dark grey */
+    color: #f0f0f0;
+    /* light grey text */
+    height: 250px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.footer-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+    /* better for mobile */
+}
+
+/* left section */
+.footer-left {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    color: #3f3f3f;
+}
+
+.footer-left a {
+    color: #b9b9b9;
+    font-size: 16px;
+}
+
+.footer-left p {
+    color: white;
+    font-size: 14px;
+}
+
+.footer-note {
+    margin-top: 12px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    max-width: 500px;
+}
+
+/* right section */
+.footer-right img {
+    display: block;
+}
+
+/* mobile tweaks */
+@media (max-width: 720px) {
+    .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer-right {
+        margin-top: 20px;
+    }
+}
+
+
+@media (max-width: 1200px) {
+    .content {
+        width: 90%;
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 900px) {
+    .content {
+        width: 90%;
+        max-width: 600px;
+        min-width: 260px;
+    }
+
+    .home-button {
+        display: none;
+    }
+}

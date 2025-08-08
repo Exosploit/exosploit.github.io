@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMU - Pit calculator</title>
+</head>
+
+
+<body>
+
+
+    <div class="contnet">
+        
+        <h1>Track</h1>
+        <select id="track">
+            <option id="Bahrain">Bahrain</option>
+            <option id="Circuit de la Sarthe">Circuit de la Sarthe</option>
+            <option id="COTA">COTA</option>
+            <option id="Fuji">Fuji</option>
+            <option id="Imola">Imola</option>
+            <option id="Interlagos">Interlagos</option>
+            <option id="Lusail">Lusail</option>
+            <option id="Monza">Monza</option>
+            <option id="Portimao">Portimao</option>
+            <option id="Sebring">Sebring</option>
+            <option id="Spa">Spa</option>
+            <option id="SpaLong">Spa Endurance</option>
+        </select>
+
+        <h1>Fuel (to add)</h1>
+        <input id="fuel-input" type="number" min="0" max="100"> % Virtual Energy
+        <input id="fuel-ratio" type="number" min="0.01" max="1.2" step="0.01"> Fuel Ratio
+
+        <!-- /////////////////////// -->
+        <h1>Damage repairs</h1>
+        <h3>Body Damage</h3>
+
+        <div class="centerDiv">
+            <div>
+                <input type="checkbox" id="body-front">
+                <label for="body-front">Front</label>
+            </div>
+
+            <div>
+                <label for="body-left">Left</label>
+                <input type="checkbox" id="body-left">
+                
+                <input type="checkbox" id="body-right">
+                <label for="body-right">Right</label>
+            </div>
+
+            <div>
+                <input type="checkbox" id="body-rear">
+                <label for="body-rear">Rear</label>
+            </div>
+
+            <div>
+                <input type="checkbox" id="body-wing">
+                <label for="body-wing">Wing</label>
+            </div>
+        </div>
+
+        <!-- /////////////////////// -->
+        <h3>Suspension</h3>
+        
+        <div class="centerDiv">
+            <div>
+                <label for="suspension-FL">Front Left</label>
+                <input type="checkbox" id="suspension-FL">
+                
+                <input type="checkbox" id="suspension-FR">
+                <label for="suspension-FR">Front Right</label>
+            </div>
+
+            <div>
+                <label for="suspension-RL">Rear Left</label>
+                <input type="checkbox" id="suspension-RL">
+                
+                <input type="checkbox" id="suspension-RR">
+                <label for="suspension-RR">Rear right</label>
+            </div>
+
+        </div>
+        
+        <div>
+            <input type="checkbox" id="blinking">
+            <label for="blinking">Blinking tyre connected to damaged suspension?</label>
+        </div>
+
+        <!-- ///////////////////// -->
+        <h1>Replacements</h1>
+        <h3>Tyres</h3>
+        
+        <div class="centerDiv">
+            <div>
+                <label for="tyres-FL">Front Left</label>
+                <input type="checkbox" id="tyres-FL">
+                
+                <input type="checkbox" id="tyres-FR">
+                <label for="tyres-FR">Front Right</label>
+            </div>
+
+            <div>
+                <label for="tyres-RL">Rear Left</label>
+                <input type="checkbox" id="tyres-RL">
+                
+                <input type="checkbox" id="tyres-RR">
+                <label for="tyres-RR">Rear right</label>
+            </div>
+        </div>
+
+        <h3>Brakes</h3>
+
+        <input type="checkbox" id="brakes">
+        <label for="brakes">Brakes</label>
+    </div>
+
+
+        <button id="calculate">Calculate pit time</button>
+
+
+        <div id="result"></div>
+    
+</body>
+
+
+</html>
+
+<style>
+    .centerDiv {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+    }
+    .centerDiv div {
+        justify-content: center;
+    }
+    .centerDiv label {
+        position: absolute;
+        margin-left: 25px;
+    }
+    .centerDiv label:nth-child(1) {
+        position: absolute;
+        margin-left: -100px;
+        text-align: right;
+    }
+</style>
+
+<script>
+/* ========= track-specific baseline times (edit whenever you learn them) ========= */
+var bahrainPitTime = 25
+var circuitDeLaSarthePitTime = 32
+var cotaPitTime = 25
+var fujiPitTime = 29
+var imolaPitTime = 33
+var interlagosPitTime = 23
+var lusailPitTime = 30
+var monzaPitTime = 25
+var portimaoPitTime = 28
+var sebringPitTime = 33
+var spaPitTime = 23
+var spaLongPitTime = 60
+
+/* ========= constants supplied by LMU ========= */
+var fuelMinTime     = 1.87   // s added whenever you refuel at all
+var fuelPerPercent  = 0.4   // s for each % filled
+
+var damageMinimum   = 31     // base time for any body/suspension repair
+var damagePerPart   = 0.7    // extra per part repaired
+
+var wingReplacement   = 30   // full nose/wing change
+var brakesReplacement = 120  // brake change
+
+var twoTires  = 5.6          // time for 1–2 tyres
+var fourTires = 7            // extra if 3–4 tyres (total 12.6)
+
+var fuelRatio = 0.89   // change if another car/track uses a different ratio
+const secondsPerLitre  = 0.25      // time LMU adds for every litre taken on
+let usedFuel = false
+let usedDamageRepair = false
+
+/* ========= pit-time calculator ========= */
+document.getElementById('calculate').addEventListener('click', () => {
+  const trackId = document.getElementById('track')?.selectedOptions[0]?.id
+  const pitLaneTime = {
+    Bahrain: bahrainPitTime,
+    'Circuit de la Sarthe': circuitDeLaSarthePitTime,
+    COTA: cotaPitTime,
+    Fuji: fujiPitTime,
+    Imola: imolaPitTime,
+    Interlagos: interlagosPitTime,
+    Lusail: lusailPitTime,
+    Monza: monzaPitTime,
+    Portimao: portimaoPitTime,
+    Sebring: sebringPitTime,
+    Spa: spaPitTime,
+    SpaLong: spaLongPitTime
+  }[trackId] || 0
+
+  let totalServiceTime = 0
+  let summary = []
+
+  /* ==== Fuel ==== */
+  const fuelPct = parseFloat(document.getElementById('fuel-input').value) || 0
+  if (fuelPct > 0) {
+    usedFuel = true
+    const timeByPercent = fuelPerPercent * fuelPct
+    const litres        = fuelPct * fuelRatio
+    const timeByLitres  = litres * secondsPerLitre - fuelMinTime
+    const fuelTime      = Math.max(timeByPercent, timeByLitres)
+
+    totalServiceTime += fuelTime
+    summary.push(`Fuel: ${(fuelTime - 0.4).toFixed(1)}s – ${(fuelTime + 0.8).toFixed(1)}s ( ${fuelPct.toFixed(1)} % → ${litres.toFixed(1)} L )`)
+  }
+
+
+
+  // Tyres
+  const tyreIds = ['tyres-FL','tyres-FR','tyres-RL','tyres-RR']
+  const tyreCount = tyreIds.filter(id => document.getElementById(id).checked).length
+  if (tyreCount > 0) {
+    const tyreTime = tyreCount <= 2 ? twoTires : twoTires + fourTires
+    totalServiceTime += tyreTime
+    summary.push(`Tyres: ${tyreTime.toFixed(1)} seconds`)
+  }
+
+  // Damage (body + suspension)
+  const bodySuspensionIds = [
+        'body-front','body-left','body-right','body-rear',
+        'suspension-FL','suspension-FR','suspension-RL','suspension-RR'
+    ]
+    const hasDamage = bodySuspensionIds.some(id => document.getElementById(id).checked)
+    if (hasDamage) {
+        usedDamageRepair = true
+        const damageTime = 32.5  // consistent value within the fixed 30–35s range
+        totalServiceTime += damageTime
+        summary.push(`Damage: 30-35s`)
+    }
+
+    // Blinking tyre logic
+    const isBlinking = document.getElementById('blinking').checked
+    const suspensionIds = ['suspension-FL','suspension-FR','suspension-RL','suspension-RR']
+    const hasSuspensionDamage = suspensionIds.some(id => document.getElementById(id).checked)
+
+    if (isBlinking && hasSuspensionDamage) {
+        totalServiceTime += 45
+        summary.push(`Blinking tyre suspension: 45.0 seconds`)
+    }
+
+  // Wing
+  if (document.getElementById('body-wing').checked) {
+    totalServiceTime += wingReplacement
+    summary.push(`Wing: ${wingReplacement.toFixed(1)} seconds`)
+  }
+
+  // Brakes
+  if (document.getElementById('brakes').checked) {
+    totalServiceTime += brakesReplacement
+    summary.push(`Brakes: ${brakesReplacement.toFixed(1)} seconds`)
+  }
+
+    const totalWithPitLane = totalServiceTime + pitLaneTime + 8
+
+
+    if (usedFuel && usedDamageRepair) {
+    minTime = -2.5
+    maxTime = 6.5
+    } else if (usedDamageRepair) {
+    minTime = -2.5
+    maxTime = 2.5
+    }
+
+    usedFuel = false
+    usedDamageRepair = false
+
+  const resultHTML = `
+  <h1>
+    Total service: (min: ${(totalServiceTime + minTime).toFixed(1)} s, max: ${(totalServiceTime + maxTime).toFixed(1)} s)<br>
+    Full pit time incl. pit lane: ${totalWithPitLane.toFixed(1)} s
+  </h1>
+  <p>${summary.join('<br>')}</p>
+`
+
+  document.getElementById('result').innerHTML = resultHTML
+})
+</script>

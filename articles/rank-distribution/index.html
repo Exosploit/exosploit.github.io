@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMUdata</title>
+    <link rel="stylesheet" href="../../main.css">
+</head>
+<body>
+    <header class="site-header" role="banner" aria-label="Main header">
+        <div class="header-inner">
+            <a href="/" class="logo-link" aria-label="LMUdata home">
+            <img src="../../assets/LMUdataLogo180x80.png" alt="LMUdata logo" width="180" height="80">
+            </a>
+
+            <nav class="main-nav" role="navigation" aria-label="Main navigation">
+            <ul class="nav-list">
+                <li class="nav-item dropdown" aria-haspopup="true">
+                    <button class="home-button" aria-expanded="false"><a role="menuitem" href="/">Home</a></button>
+                </li>
+
+                <li class="nav-item dropdown" aria-haspopup="true">
+                <button class="dropdown-toggle" aria-expanded="false">Articles<span>▼</span></button>
+                <ul class="dropdown-menu" role="menu" aria-label="Articles submenu">
+                    <li role="none"><a role="menuitem" href="https://lmudata.com/articles/rank-distribution">Rank Distribution</a></li>
+                </ul>
+                </li>
+
+                <li class="nav-item dropdown" aria-haspopup="true">
+                <button class="dropdown-toggle" aria-expanded="false">Resources<span>▼</span></button>
+                <ul class="dropdown-menu" role="menu" aria-label="Resources submenu">
+                    <li role="none"><a role="menuitem" href="https://lmudata.com/resources/percentile">Percentile Calculator</a></li>
+                </ul>
+                </li>
+            </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="content">
+        <h1>Le Mans Ultimate Rank Distribution</h1>
+        <p>All data has been weighted because it depends on SR eligibility, meaning the numbers are influenced by how often beginner, intermediate, or advanced races are held. As of 08-08-2025, analysis has been conducted on 9 beginner events, 6 intermediate events, and 4 advanced events to account for the SR eligibility.</p>
+
+        <h2>Driver Rating</h2>
+        <img src="../../assets/DRper.png" alt="Weighted Driver Rating Distribution - Absolute Numbers">
+
+        <p>
+        This chart shows the weighted <strong>distribution of Driver Rating (DR)</strong> out of a sample of 5076 players, based on <em>Safety Rating (SR) eligibility</em>.
+        </p>
+
+        <p>
+        The biggest group by far is in <i>B3</i>, the starting rank for Driver Rating, with 78.96% (<i>4008 drivers</i>). Next is <i>S1</i> with 14.48% (<i>735 drivers</i>) and <i>B2</i> with 5.79% (<i>294 drivers</i>). Very few drivers are in <i>S2</i> or <i>S3</i>, and almost none in the gold ranks (<i>G1, G2, G3</i>). Platinum ranks (<i>P1</i>, <i>P2</i>, <i>P3</i>) as well as <i>B0</i> and <i>B1</i> have zero players in this sample.
+        </p>
+
+        <p>
+        This shows that most players stay in the lower to middle DR ranks, with very few reaching the higher gold and platinum levels. Reasons could include:
+        </p>
+
+        <ul>
+            <li><strong>Starting rank:</strong> All new players begin at B3, so naturally more drivers are there.</li>
+            <li><strong>Ranking System:</strong> Rank progression is dependant on performance compared to other drivers.</li>
+            <li><strong>Skill plateau:</strong> Most drivers hit a limit before reaching gold or platinum.</li>
+            <li><strong>Casual play:</strong> Many players may not focus on improving their DR.</li>
+        </ul>
+
+        <p>
+        The sharp drop after <i>B3</i> shows that while most players can keep their starting rank, few push higher. This makes the top ranks very exclusive, with a small group of highly competitive players.
+        </p>
+
+        <hr>
+
+        <h2 id="SR">Safety Rating</h2>
+
+        <img src="../../assets/SRper.png" alt="Weighted Safety Rating Distribution - Absolute Numbers">
+
+        <p>
+        This chart shows the weighted <strong>distribution of Safety Rating (SR)</strong> out of a sample of 5076 players, based on <em>Safety Rating (SR) eligibility</em>.
+        </p>
+
+        <p>
+        Safety Rating (SR) focuses on clean driving, mainly avoiding track limit penalties but also avoiding accidents, and does not directly measure performance like DR does.
+        </p>
+
+        <p>
+        Here the largest group is at <i>B0</i>, the starting rank for SR, with 33.33% (<i>1194 drivers</i>). This shows that many players either stay in the starting rank for a long time or find it difficult to progress early on.
+        </p>
+
+        <p>
+        In most rank tiers, the biggest group is in the <em>first rank</em> of that tier (like <i>B1</i>, <i>S1</i>, or <i>G1</i>) when players first enter it. There are two exceptions: in Bronze, <i>B0</i> has the most drivers because it’s the starting point, and in Platinum, <i>P3</i> has the most drivers because it’s the final rank where players can’t go higher, so they stay there.
+        </p>
+
+        <p>
+        The spread of SR ranks is much wider than DR because it’s easier to progress. SR doesn’t depend on the skill of the people you race against, so players of all abilities can move through the ranks more freely. The wider spread than DR and the clusters could be explained by:
+        </p>
+
+        <ul>
+            <li><strong>Easier progression:</strong> SR gains are more generous than DR gains.</li>
+            <li><strong>SR eligibility:</strong> You mostly compete against similar SR players, which allow for an easier progression in higher ranks due to less incidents.</li>
+            <li><strong>Starting point:</strong> All new players start at B0 and move up from there — You can’t rank down in the starting tier.</li>
+        </ul>
+
+        <p>
+        Overall, both the DR and SR charts show that most players stay in their starting rank. However, SR is easier to increase because it doesn’t rely on your opponents’ skill level. DR gains and losses are balanced between all drivers in a race, meaning every DR percentage one player gains, another must lose, which makes moving up much harder.
+        </p>
+
+
+        <h6>Updated 08-08-2025</h6>
+    </div>
+
+
+    <footer class="site-footer" role="contentinfo">
+        <div class="footer-inner">
+            <div class="footer-left">
+                LINKS
+                <a href="https://lmudata.com/contact">Contact Us</a>
+                <a href="https://lmudata.com/legal">Legal Notice & Terms of Use</a>
+                <p>
+                    &copy; 2025 LMUdata.com. All data, charts, graphs, and associated logos are the property of LMUdata.
+                    <br>Use of said property must follow the Legal Notice & Terms of Use.
+                </p>
+            </div>
+
+            <div class="footer-right">
+            <img src="../../assets/LMUdataLogo180x80.png" alt="LMUdata logo" width="180" height="80">
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

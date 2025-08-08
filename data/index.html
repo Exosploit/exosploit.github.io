@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Rank Distribution Tracker</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            margin: 2px;
+            padding: 5px 10px;
+        }
+
+        canvas {
+            margin-top: 20px;
+            max-width: 800px;
+        }
+
+        p {
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .chart {
+            padding: 20px;
+        }
+
+        .chart_header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 800px;
+        }
+
+        .chart_info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 800px;
+        }
+
+        .chart_footer {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 800px;
+            min-width: 800px;
+            text-align: right;
+        }
+
+        .chart_footer p {
+            width: 100%;
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .B0,
+        .B1,
+        .B2,
+        .B3 {
+            background-color: rgb(161, 121, 88);
+            border: none;
+            border-radius: 5px;
+        }
+
+        .S1,
+        .S2,
+        .S3 {
+            background-color: rgb(170, 170, 170);
+            border: none;
+            border-radius: 5px;
+        }
+
+        .G1,
+        .G2,
+        .G3 {
+            background-color: rgb(254, 174, 53);
+            border: none;
+            border-radius: 5px;
+        }
+
+        .P1,
+        .P2,
+        .P3 {
+            background-color: rgb(133, 196, 241);
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div style="margin-bottom: 40px">
+        <h3>Collection Tracker goal: 9/6/4</h3>
+        <div>
+            <button id="trackB0">B0</button>
+            <button id="trackS0">S0</button>
+            <button id="trackG0">G0</button>
+        </div>
+        <button id="resetTrack" style="margin-top: 10px; background-color: red; color: white">Reset Tracker</button>
+        <p id="trackCounts">B: 0 S: 0 G: 0</p>
+    </div>
+
+    <div style="margin-bottom: 10px">
+        <label for="username"><strong>Username (optional):</strong></label>
+        <input type="text" id="username" placeholder="Enter unique name">
+    </div>
+    <div>
+        <h3>Driver Rating</h3>
+        <div id="buttons"></div>
+        <p><span id="DATA_totalUsersCount"></span> Sampled Drivers</p>
+    </div>
+    <button id="resetDR" style="margin-top: 10px; background-color: red; color: white">Reset All Data</button>
+
+    <div style="margin-top: 40px">
+        <h3>Safety Rating</h3>
+        <div id="safetyButtons"></div>
+        <p><span id="DATA_safetyTotalUsersCount"></span> Sampled Drivers</p>
+    </div>
+    <button id="resetSR" style="margin-top: 10px; background-color: red; color: white">Reset All Data</button>
+
+
+    <div class="chart">
+        <div class="chart_header">
+            <p>Weighted Driver Rating Distribution Based on SR Eligibility</p>
+            <img src="assets/LMUdataLogo180x80.png" height="32px">
+        </div>
+
+        <div class="chart_info">
+            <p style="font-weight: normal;"><span id="totalUsersCount"></span> Sampled Drivers</p>
+        </div>
+
+        <canvas id="totalChart" width="1000" height="400"></canvas>
+
+        <div style="display: flex; justify-content: flex-start; width: 800px;">
+            <img src="assets/DRB0.png" style="width: 40px; height: 40px; margin-left: 60px; margin-top: -10px;">
+            <img src="assets/DRB1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRB2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRB3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRS1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRS2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRS3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRG1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRG2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRG3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRP1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRP2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/DRP3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+        </div>
+
+        <div class="chart_footer">
+            <p class="lastUpdated" style="font-size: 14px;"></p>
+        </div>
+    </div>
+
+
+
+
+    <div class="chart">
+        <div class="chart_header">
+            <p>Weighted Driver Rating Distribution Based on SR Eligibility</p>
+            <img src="assets/LMUdataLogo180x80.png" height="32px">
+        </div>
+
+        <div class="chart_info">
+            <p style="font-weight: normal;"><span id="percentageTotalUsers"></span> Sampled Drivers</p>
+        </div>
+        
+        <canvas id="percentageChart" width="1000" height="400"></canvas>
+
+        <div style="display: flex; justify-content: flex-start; width: 800px;">
+            <img src="assets/DRB0.png" style="width: 40px; height: 40px; margin-left: 42px; margin-top: -10px;">
+            <img src="assets/DRB1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRB2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRB3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRS1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRS2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRS3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRG1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRG2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRG3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRP1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRP2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/DRP3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+        </div>
+
+        <div class="chart_footer">
+            <p class="lastUpdated" style="font-size: 14px;"></p>
+        </div>
+    </div>
+
+
+
+    <div class="chart">
+        <div class="chart_header">
+            <p>Weighted Safety Rating Distribution Based on SR Eligibility</p>
+            <img src="assets/LMUdataLogo180x80.png" height="32px">
+        </div>
+
+        <div class="chart_info">
+            <p style="font-weight: normal;"><span id="safetyTotalUsersCount"></span> Sampled Drivers</p>
+        </div>
+        
+        <canvas id="safetyTotalChart" width="1000" height="400"></canvas>
+
+        <div style="display: flex; justify-content: flex-start; width: 800px;">
+            <img src="assets/SRB0.png" style="width: 40px; height: 40px; margin-left: 54px; margin-top: -10px;">
+            <img src="assets/SRB1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRB2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRB3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRS1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRS2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRS3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRG1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRG2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRG3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRP1.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRP2.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+            <img src="assets/SRP3.png" style="width: 40px; height: 40px; margin-left: 18px; margin-top: -10px;">
+        </div>
+
+        <div class="chart_footer">
+            <p class="lastUpdated" style="font-size: 14px;"></p>
+        </div>
+    </div>
+
+
+    <div class="chart">
+        <div class="chart_header">
+            <p>Weighted Safety Rating Distribution Based on SR Eligibility</p>
+            <img src="assets/LMUdataLogo180x80.png" height="32px">
+        </div>
+
+        <div class="chart_info">
+            <p style="font-weight: normal;"><span id="safetyPercentageTotalUsers"></span> Sampled Drivers</p>
+        </div>
+
+        <canvas id="safetyPercentageChart" width="1000" height="400"></canvas>
+
+        <div style="display: flex; justify-content: flex-start; width: 800px;">
+            <img src="assets/SRB0.png" style="width: 40px; height: 40px; margin-left: 42px; margin-top: -10px;">
+            <img src="assets/SRB1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRB2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRB3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRS1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRS2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRS3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRG1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRG2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRG3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRP1.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRP2.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+            <img src="assets/SRP3.png" style="width: 40px; height: 40px; margin-left: 19px; margin-top: -10px;">
+        </div>
+
+        <div class="chart_footer">
+            <p class="lastUpdated" style="font-size: 14px;"></p>
+        </div>
+    </div>
+
+
+    <script>
+        const ranks = ['B0', 'B1', 'B2', 'B3', 'S1', 'S2', 'S3', 'G1', 'G2', 'G3', 'P1', 'P2', 'P3']
+
+        // Load from localStorage or initialize to 0
+        const savedData = localStorage.getItem('rankCounts')
+        const rankCounts = savedData ? JSON.parse(savedData) : Object.fromEntries(ranks.map(r => [r, 0]))
+
+        const usedDRUsers = JSON.parse(localStorage.getItem('usedDRUsers') || '{}')
+        const usedSRUsers = JSON.parse(localStorage.getItem('usedSRUsers') || '{}')
+
+        function saveUsedUsers() {
+            localStorage.setItem('usedDRUsers', JSON.stringify(usedDRUsers))
+            localStorage.setItem('usedSRUsers', JSON.stringify(usedSRUsers))
+        }
+
+
+        // Create buttons
+        const btnContainer = document.getElementById('buttons')
+        ranks.forEach(rank => {
+            const btn = document.createElement('button')
+            btn.innerText = rank
+            btn.className = rank
+            btn.onclick = () => incrementRank(rank)
+            btnContainer.appendChild(btn)
+        })
+
+        const totalConfig = {
+            type: 'bar',
+            data: {
+                labels: ranks,
+                datasets: [{
+                    label: 'Total Drivers',
+                    data: ranks.map(r => rankCounts[r]),
+                    backgroundColor: 'rgb(105, 135, 225)',
+                }]
+            },
+            options: {
+                layout: {
+                    padding: {
+                        top: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: v => v
+                    }
+                },
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Drivers',
+                            font: {
+                                weight: 'normal'
+                            },
+                            color: "black"
+                        }
+
+                    },
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                elements: {
+                    bar: {
+                        inflateAmount: 2,
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        }
+
+        const percentageConfig = {
+            type: 'bar',
+            data: {
+                labels: ranks,
+                datasets: [{
+                    label: 'Percentage',
+                    data: ranks.map(r => 0),
+                    backgroundColor: 'rgb(105, 135, 225)'
+                }]
+            },
+            options: {
+                layout: {
+                    padding: {
+                        top: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: value => {
+                            const num = parseFloat(value)
+                            if (num == 0) return 'No Data'
+                            if (num > 0 && num < 0.01) return '<0.01%'
+                            return num.toFixed(2) + '%'
+                        }
+                    }
+                },
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: v => v + '%'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                elements: {
+                    bar: {
+                        inflateAmount: 2,
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        }
+
+        const totalChart = new Chart(document.getElementById('totalChart'), totalConfig)
+        const percentageChart = new Chart(document.getElementById('percentageChart'), percentageConfig)
+
+        function incrementRank(rank) {
+            const username = document.getElementById('username').value.trim().toLowerCase()
+
+            if (username) {
+                if (usedDRUsers[username]) {
+                    alert(`User "${username}" has already submitted DR data.`)
+                    return
+                }
+
+                usedDRUsers[username] = true
+                saveUsedUsers()
+            }
+
+            rankCounts[rank]++
+            saveData()
+            updateCharts()
+        }
+
+        function saveData() {
+            localStorage.setItem('rankCounts', JSON.stringify(rankCounts))
+        }
+
+        function updateCharts() {
+            const total = Object.values(rankCounts).reduce((a, b) => a + b, 0)
+
+            // Update totals
+            totalChart.data.datasets[0].data = ranks.map(r => rankCounts[r])
+            const maxTotal = Math.max(0, ...ranks.map(r => rankCounts[r]))
+            const scaledMaxTotal = maxTotal * 1.1 || 10  // 10% higher or min 10 to avoid zero max
+            // totalChart.options.scales.y.max = Math.ceil(scaledMaxTotal)
+            totalChart.update()
+
+            // Update percentage chart
+            const percentages = ranks.map(r => {
+                return total === 0 ? 0 : (rankCounts[r] / total * 100)
+            })
+            const maxPercent = Math.max(...percentages)
+            const scaledMaxPercent = maxPercent * 1.1 || 10
+            // percentageChart.options.scales.y.max = Math.ceil(scaledMaxPercent)
+            percentageChart.options.scales.y.ticks.callback = function (value) {
+                return value > 100 ? '' : value + '%'
+            }
+            percentageChart.data.datasets[0].data = percentages.map(p => p.toFixed(2))
+            percentageChart.update()
+
+            // Update displayed total user counts
+            document.getElementById('totalUsersCount').innerText = total
+            document.getElementById('DATA_totalUsersCount').innerText = total
+            document.getElementById('percentageTotalUsers').innerText = total
+        }
+
+        // Initial chart rendering
+        updateCharts()
+
+        // === SAFETY RATING ===
+
+        const savedSafetyData = localStorage.getItem('safetyRankCounts')
+        const safetyRankCounts = savedSafetyData ? JSON.parse(savedSafetyData) : Object.fromEntries(ranks.map(r => [r, 0]))
+
+        // Create safety buttons
+        const safetyBtnContainer = document.getElementById('safetyButtons')
+        ranks.forEach(rank => {
+            const btn = document.createElement('button')
+            btn.innerText = rank
+            btn.className = rank
+            btn.onclick = () => incrementSafetyRank(rank)
+            safetyBtnContainer.appendChild(btn)
+        })
+
+        const safetyTotalConfig = {
+            type: 'bar',
+            data: {
+                labels: ranks,
+                datasets: [{
+                    label: 'Total Drivers',
+                    data: ranks.map(r => safetyRankCounts[r]),
+                    backgroundColor: 'rgb(105, 205, 135)'
+                }]
+            },
+            options: {
+                layout: {
+                    padding: {
+                        top: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: v => v
+                    }
+                },
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Drivers',
+                            font: {
+                                weight: 'normal'
+                            },
+                            color: "black"
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                elements: {
+                    bar: {
+                        inflateAmount: 2,
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        }
+
+        const safetyPercentageConfig = {
+            type: 'bar',
+            data: {
+                labels: ranks,
+                datasets: [{
+                    label: 'Percentage',
+                    data: ranks.map(r => 0),
+                    backgroundColor: 'rgb(105, 205, 135)'
+                }]
+            },
+            options: {
+                layout: {
+                    padding: {
+                        top: 20
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        color: '#000',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: value => {
+                            const num = parseFloat(value)
+                            if (num == 0) return 'No Data'
+                            if (num > 0 && num < 0.01) return '<0.01%'
+                            return num.toFixed(2) + '%'
+                        }
+                    }
+                },
+                responsive: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: v => v + '%'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            display: false
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                elements: {
+                    bar: {
+                        inflateAmount: 2,
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        }
+
+        const safetyTotalChart = new Chart(document.getElementById('safetyTotalChart'), safetyTotalConfig)
+        const safetyPercentageChart = new Chart(document.getElementById('safetyPercentageChart'), safetyPercentageConfig)
+
+        function incrementSafetyRank(rank) {
+            const username = document.getElementById('username').value.trim().toLowerCase()
+
+            if (username) {
+                if (usedSRUsers[username]) {
+                    alert(`User "${username}" has already submitted SR data.`)
+                    return
+                }
+
+                usedSRUsers[username] = true
+                saveUsedUsers()
+            }
+
+            safetyRankCounts[rank]++
+            saveSafetyData()
+            updateSafetyCharts()
+        }
+
+
+        function saveSafetyData() {
+            localStorage.setItem('safetyRankCounts', JSON.stringify(safetyRankCounts))
+        }
+
+        function updateSafetyCharts() {
+            const total = Object.values(safetyRankCounts).reduce((a, b) => a + b, 0)
+
+            safetyTotalChart.data.datasets[0].data = ranks.map(r => safetyRankCounts[r])
+            const maxTotal = Math.max(0, ...ranks.map(r => safetyRankCounts[r]))
+            const scaledMaxTotal = maxTotal * 1.1 || 10  // 10% higher or min 10 to avoid zero max
+            // safetyTotalChart.options.scales.y.max = Math.ceil(scaledMaxTotal)
+            safetyTotalChart.update()
+
+            const percentages = ranks.map(r => {
+                return total === 0 ? 0 : (safetyRankCounts[r] / total * 100)
+            })
+            
+            const maxPercent = Math.max(...percentages)
+            const scaledMaxPercent = maxPercent * 1.1 || 10
+            // safetyPercentageChart.options.scales.y.max = Math.ceil(scaledMaxPercent)
+            safetyPercentageChart.options.scales.y.ticks.callback = function (value) {
+                return value > 100 ? '' : value + '%'
+            }
+            safetyPercentageChart.data.datasets[0].data = percentages.map(p => p.toFixed(2))
+            safetyPercentageChart.update()
+
+            // Update counts in UI
+            document.getElementById('safetyTotalUsersCount').innerText = total
+            document.getElementById('DATA_safetyTotalUsersCount').innerText = total
+            document.getElementById('safetyPercentageTotalUsers').innerText = total
+        }
+
+        // Initial rendering
+        updateSafetyCharts()
+
+
+        // ==== RESET ==== //
+        document.getElementById('resetDR').onclick = () => {
+            if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                ranks.forEach(rank => rankCounts[rank] = 0)
+                localStorage.removeItem('rankCounts')
+                localStorage.removeItem('usedDRUsers')
+                for (let u in usedDRUsers) delete usedDRUsers[u]
+                updateCharts()
+            }
+        }
+
+        document.getElementById('resetSR').onclick = () => {
+            if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+                ranks.forEach(rank => safetyRankCounts[rank] = 0)
+                localStorage.removeItem('safetyRankCounts')
+                localStorage.removeItem('usedSRUsers')
+                for (let u in usedSRUsers) delete usedSRUsers[u]
+                updateSafetyCharts()
+            }
+        }
+
+
+        // ==== UPDATED AT ==== //
+        const now = new Date()
+        const formatted = now.toLocaleString('sv-SE', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        })
+
+
+        document.querySelectorAll('.lastUpdated').forEach(el => {
+            el.innerText = 'Updated: ' + formatted
+        })
+
+
+        // ==== DATA COLLECTION INFO ==== //
+        // === TRACKING B0, S0, G0 ===
+        const trackCounts = JSON.parse(localStorage.getItem('trackCounts') || '{"B0":0,"S0":0,"G0":0}')
+        const trackDisplay = document.getElementById('trackCounts')
+
+        function updateTrackDisplay() {
+            trackDisplay.innerText = `Br: ${trackCounts.B0} Si: ${trackCounts.S0} Go: ${trackCounts.G0}`
+        }
+
+        function saveTrackCounts() {
+            localStorage.setItem('trackCounts', JSON.stringify(trackCounts))
+        }
+
+        document.getElementById('trackB0').onclick = () => {
+            trackCounts.B0++
+            saveTrackCounts()
+            updateTrackDisplay()
+        }
+
+        document.getElementById('trackS0').onclick = () => {
+            trackCounts.S0++
+            saveTrackCounts()
+            updateTrackDisplay()
+        }
+
+        document.getElementById('trackG0').onclick = () => {
+            trackCounts.G0++
+            saveTrackCounts()
+            updateTrackDisplay()
+        }
+
+        // Initial render
+        updateTrackDisplay()
+
+        document.getElementById('resetTrack').onclick = () => {
+            if (confirm('Reset all tracker counts?')) {
+                trackCounts.B0 = 0
+                trackCounts.S0 = 0
+                trackCounts.G0 = 0
+                saveTrackCounts()
+                updateTrackDisplay()
+            }
+        }
+
+
+
+    </script>
