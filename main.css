@@ -176,6 +176,13 @@ a {
     /* This sets both row and column gap */
 }
 
+.split-two > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
 .split-two a {
     border: none;
     border-radius: 5px;

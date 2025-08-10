@@ -68,7 +68,7 @@ function calculatePercentile(rank, data) {
     if (key === rank) break
     better += data[key]
   }
-  return ((total - better) / total * 100).toFixed(2)
+  return (100 - ((total - better) / total * 100)).toFixed(2)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
