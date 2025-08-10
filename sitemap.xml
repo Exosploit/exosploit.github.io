@@ -14,12 +14,12 @@
       </image:image>
       
       <image:image>
-         <image:loc>https://example.com/images/product-blue.jpg</image:loc>
+         <image:loc>https://lmudata.com/assets/safety-rating-distribution.png</image:loc>
          <image:title>Le Mans Ultimate Safety Rating distribution</image:title>
       </image:image>
       
       <image:image>
-         <image:loc>https://example.com/images/product-blue.jpg</image:loc>
+         <image:loc>https://lmudata.com/assets/lmu-DR-iRating.png</image:loc>
          <image:title>Le Mans Ultimate rank distribution compared to iRating</image:title>
       </image:image>
    </url>
