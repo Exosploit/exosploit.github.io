@@ -370,10 +370,6 @@ a {
         flex-direction: column;
         align-items: flex-start;
     }
-
-    .footer-right {
-        margin-top: 20px;
-    }
 }
 
 
@@ -394,4 +390,8 @@ a {
     .home-button {
         display: none;
     }
+
+    .site-footer {
+    padding: 40px 20px 20px 20px;
+}
 }
